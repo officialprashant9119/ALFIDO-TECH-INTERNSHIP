@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MarkTask - Animated To-Do List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        animation: fadeIn 0.8s ease-out;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0) 60%
+        );
+        transform: rotate(30deg);
+        pointer-events: none;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .logo-icon {
+        font-size: 2.5rem;
+        color: #6a11cb;
+        margin-right: 10px;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        color: #333;
+        font-size: 2.8rem;
+        margin-bottom: 5px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .header p {
+        color: #666;
+        font-size: 1rem;
+      }
+
+      .input-section {
+        display: flex;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      #task-input {
+        flex: 1;
+        padding: 18px;
+        border: 2px solid #ddd;
+        border-radius: 12px 0 0 12px;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      #task-input:focus {
+        border-color: #6a11cb;
+        box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+      }
+
+      #add-btn {
+        padding: 18px 25px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        border-radius: 0 12px 12px 0;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
+      }
+
+      #add-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(106, 17, 203, 0.4);
+      }
+
+      .tasks-container {
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 5px;
+        margin-bottom: 20px;
+      }
+
+      .tasks-container::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .tasks-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .tasks-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #6a11cb, #2575fc);
+        border-radius: 10px;
+      }
+
+      .task-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0.7)
+        );
+        padding: 18px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        animation: slideIn 0.4s ease-out;
+        transition: all 0.3s;
+        border-left: 5px solid #6a11cb;
+      }
+
+      .task-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .task-text {
+        flex: 1;
+        font-size: 16px;
+        word-break: break-word;
+        padding-right: 15px;
+        color: #444;
+      }
+
+      .completed {
+        text-decoration: line-through;
+        color: #888;
+        opacity: 0.8;
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .complete-btn,
+      .delete-btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .complete-btn {
+        background: linear-gradient(to right, #4caf50, #8bc34a);
+        color: white;
+      }
+
+      .delete-btn {
+        background: linear-gradient(to right, #ff416c, #ff4b2b);
+        color: white;
+      }
+
+      .complete-btn:hover,
+      .delete-btn:hover {
+        opacity: 0.9;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #888;
+        animation: fadeIn 1s;
+      }
+
+      .empty-state i {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        color: #6a11cb;
+        opacity: 0.5;
+      }
+
+      .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #666;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        color: #666;
+        font-size: 14px;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      @keyframes removeAnimation {
+        to {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+      }
+
+      .removing {
+        animation: removeAnimation 0.5s forwards;
+      }
+
+      /* Celebration Modal */
+      .celebration-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.5s;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        max-width: 90%;
+        width: 500px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: scaleIn 0.5s;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .modal-content h2 {
+        color: #6a11cb;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+
+      .modal-content p {
+        color: #666;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+      }
+
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #f0f;
+        animation: confettiFall 5s linear infinite;
+      }
+
+      @keyframes confettiFall {
+        0% {
+          transform: translateY(-100px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      #close-modal {
+        padding: 12px 30px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+      }
+
+      #close-modal:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+      }
+
+      .celebration-icon {
+        font-size: 5rem;
+        color: gold;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+
+        .input-section {
+          flex-direction: column;
+        }
+
+        #task-input {
+          border-radius: 12px;
+          margin-bottom: 10px;
+        }
+
+        #add-btn {
+          border-radius: 12px;
+          padding: 15px;
+        }
+
+        .header h1 {
+          font-size: 2.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <i class="fas fa-tasks logo-icon"></i>
+          <h1>MarkTask</h1>
+        </div>
+        <p>Organize your tasks and boost productivity</p>
+      </div>
+
+      <div class="input-section">
+        <input type="text" id="task-input" placeholder="Enter a new task..." />
+        <button id="add-btn">Add Task</button>
+      </div>
+
+      <div class="tasks-container" id="tasks-container">
+        <!-- Tasks will be added here dynamically -->
+        <div class="empty-state" id="empty-state">
+          <i class="fas fa-clipboard-list"></i>
+          <h3>No tasks yet</h3>
+          <p>Add a task to get started</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <span>Total tasks: <span id="total-tasks">0</span></span>
+        <span>Completed: <span id="completed-tasks">0</span></span>
+      </div>
+    </div>
+
+    <!-- Celebration Modal -->
+    <div class="celebration-modal" id="celebration-modal">
+      <div class="modal-content">
+        <div class="celebration-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h2>Congratulations!</h2>
+        <p>You've completed all your tasks for today!</p>
+        <button id="close-modal">Continue</button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const taskInput = document.getElementById("task-input");
+        const addBtn = document.getElementById("add-btn");
+        const tasksContainer = document.getElementById("tasks-container");
+        const emptyState = document.getElementById("empty-state");
+        const totalTasksSpan = document.getElementById("total-tasks");
+        const completedTasksSpan = document.getElementById("completed-tasks");
+        const celebrationModal = document.getElementById("celebration-modal");
+        const closeModalBtn = document.getElementById("close-modal");
+
+        let tasks = [];
+        let taskId = 0;
+
+        // Load tasks from localStorage if available
+        if (localStorage.getItem("tasks")) {
+          tasks = JSON.parse(localStorage.getItem("tasks"));
+          taskId =
+            tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 0;
+          renderTasks();
+        }
+
+        // Add task when clicking the Add button
+        addBtn.addEventListener("click", addTask);
+
+        // Add task when pressing Enter in the input field
+        taskInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            addTask();
+          }
+        });
+
+        // Close modal when clicking the button
+        closeModalBtn.addEventListener("click", function () {
+          celebrationModal.style.display = "none";
+        });
+
+        function addTask() {
+          const taskText = taskInput.value.trim();
+
+          if (taskText === "") {
+            // Add a shake animation to indicate error
+            taskInput.style.animation = "shake 0.5s";
+            setTimeout(() => {
+              taskInput.style.animation = "";
+            }, 500);
+            return;
+          }
+
+          const task = {
+            id: taskId++,
+            text: taskText,
+            completed: false,
+          };
+
+          tasks.push(task);
+          saveTasks();
+          renderTasks();
+
+          // Clear input field
+          taskInput.value = "";
+          taskInput.focus();
+        }
+
+        function deleteTask(id) {
+          const taskElement = document.getElementById(`task-${id}`);
+
+          // Add removal animation
+          taskElement.classList.add("removing");
+
+          // Wait for animation to complete before removing
+          setTimeout(() => {
+            tasks = tasks.filter((task) => task.id !== id);
+            saveTasks();
+            renderTasks();
+          }, 500);
+        }
+
+        function toggleComplete(id) {
+          const task = tasks.find((task) => task.id === id);
+          task.completed = !task.completed;
+          saveTasks();
+          renderTasks();
+
+          // Check if all tasks are completed
+          checkAllTasksCompleted();
+        }
+
+        function checkAllTasksCompleted() {
+          if (tasks.length > 0 && tasks.every((task) => task.completed)) {
+            // Show celebration modal
+            celebrationModal.style.display = "flex";
+            createConfetti();
+          }
+        }
+
+        function createConfetti() {
+          const modalContent = document.querySelector(".modal-content");
+          const colors = [
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#ff00ff",
+            "#00ffff",
+          ];
+
+          // Create 50 confetti pieces
+          for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = Math.random() * 100 + "%";
+            confetti.style.animationDelay = Math.random() * 5 + "s";
+            confetti.style.backgroundColor =
+              colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.width = Math.random() * 10 + 5 + "px";
+            confetti.style.height = Math.random() * 10 + 5 + "px";
+            modalContent.appendChild(confetti);
+
+            // Remove confetti after animation completes
+            setTimeout(() => {
+              confetti.remove();
+            }, 5000);
+          }
+        }
+
+        function saveTasks() {
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+          // Update stats
+          totalTasksSpan.textContent = tasks.length;
+          completedTasksSpan.textContent = tasks.filter(
+            (task) => task.completed
+          ).length;
+
+          // Show or hide empty state
+          if (tasks.length === 0) {
+            emptyState.style.display = "block";
+            tasksContainer.innerHTML = "";
+            tasksContainer.appendChild(emptyState);
+          } else {
+            emptyState.style.display = "none";
+
+            // Clear the container
+            tasksContainer.innerHTML = "";
+
+            // Add each task to the container
+            tasks.forEach((task) => {
+              const taskElement = document.createElement("div");
+              taskElement.className = "task-item";
+              taskElement.id = `task-${task.id}`;
+
+              const taskText = document.createElement("div");
+              taskText.className = `task-text ${
+                task.completed ? "completed" : ""
+              }`;
+              taskText.textContent = task.text;
+
+              const taskActions = document.createElement("div");
+              taskActions.className = "task-actions";
+
+              const completeBtn = document.createElement("button");
+              completeBtn.className = "complete-btn";
+              completeBtn.innerHTML = task.completed
+                ? '<i class="fas fa-undo"></i> Undo'
+                : '<i class="fas fa-check"></i> Complete';
+              completeBtn.addEventListener("click", () =>
+                toggleComplete(task.id)
+              );
+
+              const deleteBtn = document.createElement("button");
+              deleteBtn.className = "delete-btn";
+              deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+              deleteBtn.addEventListener("click", () => deleteTask(task.id));
+
+              taskActions.appendChild(completeBtn);
+              taskActions.appendChild(deleteBtn);
+
+              taskElement.appendChild(taskText);
+              taskElement.appendChild(taskActions);
+
+              tasksContainer.appendChild(taskElement);
+            });
+          }
+        }
+
+        // Add shake animation for input validation
+        const style = document.createElement("style");
+        style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+        document.head.appendChild(style);
+      });
+    </script>
+  </body>
+</html>
