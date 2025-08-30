@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prashant Kumar - BCA Student</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        width: 100%;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+      }
+
+      header {
+        background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+        color: white;
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      h1 {
+        font-size: 2.8rem;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        font-weight: 300;
+        opacity: 0.9;
+      }
+
+      .content {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 30px;
+      }
+
+      .image-container {
+        flex: 1;
+        min-width: 300px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .profile-img {
+        width: 100%;
+        max-width: 280px;
+        border-radius: 50%;
+        border: 5px solid #f0f0f0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .profile-img:hover {
+        transform: scale(1.03);
+      }
+
+      .bio {
+        flex: 2;
+        min-width: 300px;
+        padding: 20px;
+      }
+
+      h2 {
+        color: #6a11cb;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      p {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .highlight {
+        color: #2575fc;
+        font-weight: 600;
+      }
+
+      .university {
+        color: #6a11cb;
+        font-weight: 600;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          flex-direction: column;
+        }
+
+        .image-container,
+        .bio {
+          width: 100%;
+        }
+
+        h1 {
+          font-size: 2.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Prashant Kumar</h1>
+        <p class="tagline">BCA Student at Teerthanker Mahaveer University</p>
+      </header>
+
+      <div class="content">
+        <div class="image-container">
+          <img
+            src="data:image/jpeg;base64,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"
+            alt="Prashant Kumar - BCA Student"
+            class="profile-img" />
+        </div>
+
+        <div class="bio">
+          <h2>About Me</h2>
+
+          <p>
+            Hello! I'm <span class="highlight">Prashant Kumar</span>, a
+            passionate and dedicated student currently pursuing a Bachelor of
+            Computer Applications (BCA) degree at
+            <span class="university">Teerthanker Mahaveer University</span> in
+            Moradabad.
+          </p>
+
+          <p>
+            My academic journey in computer applications has equipped me with a
+            strong foundation in programming, Web development, and database
+            management. I'm particularly interested in web development and enjoy
+            creating interactive, user-friendly digital experiences.
+          </p>
+
+          <p>
+            When I'm not immersed in coding or studying, I enjoy expanding my
+            knowledge through online courses and tech blogs. I believe in
+            continuous learning and regularly participate in coding competitions
+            to enhance my problem-solving skills.
+          </p>
+
+          <p>
+            I'm excited about the future of technology and look forward to
+            contributing to innovative projects that make a positive impact on
+            society.
+          </p>
+          <br />
+          <h3>Thanks ALFIDO TECH,</h3>
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2025 Prashant Kumar. All Rights Reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
