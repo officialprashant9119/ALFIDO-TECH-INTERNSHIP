@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Background Color Changer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transition: background-color 0.5s ease;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        padding: 20px;
+        text-align: center;
+      }
+
+      .container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 100%;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 2.2rem;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .color-button {
+        background-color: #4a00e0;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        margin: 20px 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+
+      .color-button:hover {
+        background-color: #3a00b0;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .color-button:active {
+        transform: translateY(0);
+      }
+
+      .color-display {
+        margin-top: 30px;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, 0.1);
+        font-weight: 500;
+      }
+
+      .current-color {
+        font-weight: 700;
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+      }
+
+      .instructions {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        font-size: 0.9rem;
+        color: #888;
+      }
+
+      .history {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .color-history {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      footer {
+        margin-top: 40px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 30px 20px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .color-button {
+          padding: 12px 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Background Color Changer</h1>
+      <p>
+        Click the button below to change the background to a random color. The
+        page will display the current color in HEX format and keep a history of
+        your recent colors.
+      </p>
+
+      <button class="color-button" id="colorBtn">
+        Change Background Color
+      </button>
+
+      <div class="color-display">
+        Current color:
+        <span class="current-color" id="currentColor">#6A11CB</span>
+      </div>
+
+      <div class="history" id="colorHistory"></div>
+
+      <div class="instructions">
+        <p>
+          You can also click on any color in the history to return to that
+          specific color.
+        </p>
+      </div>
+    </div>
+
+    <footer>
+      <p>Random Color Generator - Created for educational purposes</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const colorBtn = document.getElementById("colorBtn");
+        const currentColorElement = document.getElementById("currentColor");
+        const colorHistoryElement = document.getElementById("colorHistory");
+        let colorHistory = [];
+        const maxHistory = 8;
+
+        // Function to generate a random hex color
+        function getRandomColor() {
+          const letters = "0123456789ABCDEF";
+          let color = "#";
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+
+        // Function to update the background color
+        function updateBackgroundColor(color) {
+          document.body.style.background = color;
+          currentColorElement.textContent = color.toUpperCase();
+
+          // Store color in history (avoid duplicates in a row)
+          if (colorHistory[0] !== color) {
+            colorHistory.unshift(color);
+
+            // Keep only the most recent colors
+            if (colorHistory.length > maxHistory) {
+              colorHistory.pop();
+            }
+
+            updateColorHistory();
+          }
+        }
+
+        // Function to update color history display
+        function updateColorHistory() {
+          colorHistoryElement.innerHTML = "";
+
+          colorHistory.forEach((color) => {
+            const colorElement = document.createElement("div");
+            colorElement.className = "color-history";
+            colorElement.style.backgroundColor = color;
+            colorElement.title = color.toUpperCase();
+
+            colorElement.addEventListener("click", function () {
+              updateBackgroundColor(color);
+            });
+
+            colorHistoryElement.appendChild(colorElement);
+          });
+        }
+
+        // Event listener for the button click
+        colorBtn.addEventListener("click", function () {
+          const randomColor = getRandomColor();
+          updateBackgroundColor(randomColor);
+        });
+
+        // Initialize with the current gradient
+        updateColorHistory();
+      });
+    </script>
+  </body>
+</html>
