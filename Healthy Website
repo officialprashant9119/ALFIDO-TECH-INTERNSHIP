@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Bano - Bilingual Health App</title>
+    <!-- Material Icons & Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+            color: #1b5e20;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(rgba(46, 125, 50, 0.9), rgba(27, 94, 32, 0.9)), 
+                        url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            background: white;
+            color: #2e7d32;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .lang-btn.active {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(46, 125, 50, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(46, 125, 50, 0.25);
+        }
+
+        .card-icon {
+            font-size: 3em;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #1b5e20;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #a5d6a7;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #c8e6c9;
+            border-radius: 15px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+
+        button {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(46, 125, 50, 0.4);
+        }
+
+        .result-box {
+            background: #e8f5e9;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #2e7d32;
+        }
+
+        .highlight {
+            color: #2e7d32;
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #c8e6c9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .progress-fill.red {
+            background: linear-gradient(90deg, #ff5252, #d32f2f);
+        }
+
+        .diet-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .diet-item .material-icons {
+            color: #2e7d32;
+            margin-right: 15px;
+            font-size: 28px;
+        }
+
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: white;
+            margin: 8px 0;
+            border-radius: 12px;
+        }
+
+        .exercise-time {
+            background: #2e7d32;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .tracker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tracker-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+        }
+
+        .tracker-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .history-item {
+            background: #f1f8e9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            font-size: 0.9em;
+            border-left: 3px solid #2e7d32;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            background: #1b5e20;
+            color: white;
+            border-radius: 50px 50px 0 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="lang-switch">
+                <button id="langEn" class="lang-btn" onclick="setLanguage('en')">English</button>
+                <button id="langHi" class="lang-btn active" onclick="setLanguage('hi')">हिंदी</button>
+            </div>
+            <h1 id="appTitle">🌱 Healthy Bano</h1>
+            <p id="appSubtitle">आपका स्वास्थ्य, आपकी शक्ति | 100% नेचुरल और साइंटिफिक तरीका</p>
+            <div style="margin-top: 20px;">
+                <span class="material-icons" style="font-size: 40px; margin-right: 10px;">favorite</span>
+                <span class="material-icons" style="font-size: 40px; margin-right: 10px;">self_improvement</span>
+                <span class="material-icons" style="font-size: 40px;">eco</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- BMI Calculator Card -->
+        <div class="card" style="grid-column: 1/-1;">
+            <div class="card-icon">
+                <span class="material-icons" style="font-size: 50px;">calculate</span>
+            </div>
+            <h3 id="bmiCardTitle">🔢 अपना BMI कैलकुलेट करें</h3>
+            <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div class="input-group">
+                    <label id="ageLabel">आपकी उम्र (साल)</label>
+                    <input type="number" id="age" placeholder="जैसे: 25" min="1" max="120">
+                </div>
+                <div class="input-group">
+                    <label id="weightLabel">वजन (किलो)</label>
+                    <input type="number" id="weight" placeholder="जैसे: 70" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label id="heightLabel">ऊंचाई (सेमी)</label>
+                    <input type="number" id="height" placeholder="जैसे: 170" step="0.1">
+                </div>
+            </div>
+            <button onclick="calculateBMI()" id="calcBtn">
+                <span class="material-icons" style="vertical-align: middle;">search</span> मेरा BMI निकालें
+            </button>
+            
+            <div id="bmiResult" class="result-box" style="display:none;">
+                <h4 id="resultHeading">📊 आपका रिजल्ट:</h4>
+                <p class="highlight" id="bmiValue"></p>
+                <p id="bmiCategory"></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="bmiProgress" style="width:0%"></div>
+                </div>
+                <p id="bmiAdvice"></p>
+            </div>
+        </div>
+
+        <!-- BMI Range Info Card -->
+        <div class="card">
+            <span class="material-icons card-icon">info</span>
+            <h3 id="rangeTitle">📊 BMI Range तालिका</h3>
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 15px;">
+                <p id="rangeUnderweight"><strong style="color: #f44336;">कम वजन:</strong> 18.5 से कम</p>
+                <p id="rangeNormal"><strong style="color: #4caf50;">सामान्य:</strong> 18.5 – 24.9</p>
+                <p id="rangeOverweight"><strong style="color: #ff9800;">अधिक वजन:</strong> 25 – 29.9</p>
+                <p id="rangeObese"><strong style="color: #d32f2f;">मोटापा:</strong> 30 या उससे ज्यादा</p>
+            </div>
+        </div>
+
+        <!-- Diet Plan Card (Auto Change) -->
+        <div class="card">
+            <span class="material-icons card-icon">restaurant</span>
+            <h3 id="dietTitle">🥗 आपका डाइट प्लान (BMI के अनुसार)</h3>
+            <div id="dietPlan">
+                <p id="dietPlaceholder">पहले BMI कैलकुलेट करें</p>
+            </div>
+        </div>
+
+        <!-- Exercise Plan Card -->
+        <div class="card">
+            <span class="material-icons card-icon">fitness_center</span>
+            <h3 id="exerciseTitle">💪 एक्सरसाइज प्लान</h3>
+            <div id="exercisePlan">
+                <p id="exercisePlaceholder">पहले BMI कैलकुलेट करें</p>
+            </div>
+        </div>
+
+        <!-- Fitness Timeline Card -->
+        <div class="card">
+            <span class="material-icons card-icon">timeline</span>
+            <h3 id="timelineTitle">⏰ फिटनेस टाइमलाइन</h3>
+            <div id="timeline">
+                <p id="timelinePlaceholder">पहले BMI कैलकुलेट करें</p>
+            </div>
+        </div>
+
+        <!-- Daily Trackers Card -->
+        <div class="card">
+            <h3 id="trackerTitle">📱 डेली हेल्थ ट्रैकर (Data Save होगा)</h3>
+            <div class="tracker-grid">
+                <div class="tracker-item">
+                    <span class="material-icons" style="color: #2196f3; font-size: 40px;">water_drop</span>
+                    <div class="tracker-value" id="waterCount">0</div>
+                    <div id="waterLabel">गिलास पानी</div>
+                    <button onclick="addWater()" id="waterBtn" style="padding: 5px; margin-top: 5px;">+1 गिलास</button>
+                </div>
+                <div class="tracker-item">
+                    <span class="material-icons" style="color: #ff9800; font-size: 40px;">directions_walk</span>
+                    <div class="tracker-value" id="stepCount">0</div>
+                    <div id="stepLabel">कदम</div>
+                    <button onclick="addSteps()" id="stepBtn" style="padding: 5px; margin-top: 5px;">+100 कदम</button>
+                </div>
+                <div class="tracker-item">
+                    <span class="material-icons" style="color: #4caf50; font-size: 40px;">bedtime</span>
+                    <div class="tracker-value" id="sleepHours">0</div>
+                    <div id="sleepLabel">घंटे नींद</div>
+                    <button onclick="addSleep()" id="sleepBtn" style="padding: 5px; margin-top: 5px;">+1 घंटा</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Tips & History -->
+        <div class="grid">
+            <div class="card">
+                <span class="material-icons card-icon">lightbulb</span>
+                <h3 id="tipsTitle">💡 हेल्थ टिप्स</h3>
+                <div id="healthTip">
+                    <p>रोज सुबह गुनगुना पानी पिएं</p>
+                </div>
+                <button onclick="newTip()" id="tipBtn">नई टिप देखें</button>
+            </div>
+
+            <!-- BMI History -->
+            <div class="card">
+                <span class="material-icons card-icon">history</span>
+                <h3 id="historyTitle">📜 BMI हिस्ट्री (पिछले 5)</h3>
+                <div id="bmiHistory" class="history-list">
+                    <!-- History will be loaded here -->
+                </div>
+                <button onclick="clearHistory()" id="clearHistoryBtn" style="background: #d32f2f;">हिस्ट्री साफ करें</button>
+            </div>
+        </div>
+
+        <!-- Yoga & Meditation -->
+        <div class="card">
+            <h3 id="yogaTitle">🧘 योगा & मेडिटेशन</h3>
+            <div class="diet-item">
+                <span class="material-icons">wb_sunny</span>
+                <div>
+                    <strong id="suryaName">सूर्य नमस्कार</strong>
+                    <p id="suryaDesc">12 मिनट, 12 लाभ</p>
+                </div>
+            </div>
+            <div class="diet-item">
+                <span class="material-icons">air</span>
+                <div>
+                    <strong id="pranayamName">प्राणायाम</strong>
+                    <p id="pranayamDesc">10 मिनट, शांत मन</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p id="footerText">🌿 Healthy Bano - प्रकृति का तोहफा</p>
+            <p id="footerSubtext" style="opacity: 0.8;">संकल्प करो, स्वस्थ बनो | 100% आयुर्वेदिक तरीका</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== LANGUAGE TRANSLATIONS ====================
+        const translations = {
+            en: {
+                appTitle: "🌱 Healthy Bano",
+                appSubtitle: "Your Health, Your Power | 100% Natural & Scientific Way",
+                bmiCardTitle: "🔢 Calculate Your BMI",
+                ageLabel: "Your Age (years)",
+                weightLabel: "Weight (kg)",
+                heightLabel: "Height (cm)",
+                calcBtn: "Calculate My BMI",
+                resultHeading: "📊 Your Result:",
+                rangeTitle: "📊 BMI Range Table",
+                rangeUnderweight: "<strong style='color:#f44336;'>Underweight:</strong> less than 18.5",
+                rangeNormal: "<strong style='color:#4caf50;'>Normal:</strong> 18.5 – 24.9",
+                rangeOverweight: "<strong style='color:#ff9800;'>Overweight:</strong> 25 – 29.9",
+                rangeObese: "<strong style='color:#d32f2f;'>Obese:</strong> 30 or more",
+                dietTitle: "🥗 Your Diet Plan (As per BMI)",
+                dietPlaceholder: "Calculate BMI first",
+                exerciseTitle: "💪 Exercise Plan",
+                exercisePlaceholder: "Calculate BMI first",
+                timelineTitle: "⏰ Fitness Timeline",
+                timelinePlaceholder: "Calculate BMI first",
+                trackerTitle: "📱 Daily Health Tracker (Data Saved)",
+                waterLabel: "Glasses of Water",
+                waterBtn: "+1 Glass",
+                stepLabel: "Steps",
+                stepBtn: "+100 Steps",
+                sleepLabel: "Hours of Sleep",
+                sleepBtn: "+1 Hour",
+                tipsTitle: "💡 Health Tips",
+                tipBtn: "New Tip",
+                historyTitle: "📜 BMI History (Last 5)",
+                clearHistoryBtn: "Clear History",
+                yogaTitle: "🧘 Yoga & Meditation",
+                suryaName: "Surya Namaskar",
+                suryaDesc: "12 minutes, 12 benefits",
+                pranayamName: "Pranayama",
+                pranayamDesc: "10 minutes, calm mind",
+                footerText: "🌿 Healthy Bano - Gift of Nature",
+                footerSubtext: "Commit, Get Healthy | 100% Ayurvedic Way",
+                // BMI categories and advice
+                bmiCategories: {
+                    underweight: "Underweight ⚠️",
+                    normal: "Normal - Perfect! 🎉",
+                    overweight: "Overweight ⚠️",
+                    obese: "Obese 🚨"
+                },
+                bmiAdvice: {
+                    underweight: "You need to gain weight. Eat healthy fats and protein.",
+                    normal: "You are healthy. Keep it up!",
+                    overweight: "Lose some weight. Exercise and control your diet.",
+                    obese: "Consult a doctor. Start diet and exercise immediately."
+                },
+                // Diet plans
+                dietPlans: {
+                    underweight: [
+                        "🥛 Breakfast: Banana + Milk + Dry Fruits + Peanuts",
+                        "🍛 Lunch: Rajma-Rice + Curd + Ghee",
+                        "🍲 Dinner: Paneer + Roti + Salad + Jaggery",
+                        "🥜 Snacks: Makhana + Milk"
+                    ],
+                    normal: [
+                        "🥣 Breakfast: Oats + Fruits + Green Tea",
+                        "🍛 Lunch: Mixed Dal + 2 Rotis + Salad",
+                        "🥗 Dinner: Vegetables + Dal + Rice",
+                        "🌰 Snacks: Roasted Chana + Cucumber"
+                    ],
+                    overweight: [
+                        "🍎 Breakfast: Fruits + Green Tea + 2 Almonds",
+                        "🥦 Lunch: Grilled Veggies + Salad + Curd + 1 Roti",
+                        "🥣 Dinner: Salad + Dal + ½ Roti",
+                        "🥒 Snacks: Puffed Rice + Roasted Chana"
+                    ],
+                    obese: [
+                        "🍏 Breakfast: Only Fruits + Green Tea",
+                        "🥗 Lunch: Salad + Boiled Veggies + Dal",
+                        "🥣 Dinner: Salad + Soup (No Roti)",
+                        "🥕 Snacks: Carrot + Radish"
+                    ]
+                },
+                // Exercise plans
+                exercisePlans: {
+                    underweight: [
+                        "🏋️ Weight Training - 30 min",
+                        "🧘 Yoga - 20 min",
+                        "🚶 Walk - 30 min"
+                    ],
+                    normal: [
+                        "🏃 Cardio - 25 min",
+                        "🧘 Yoga - 20 min",
+                        "🤸 Stretching - 15 min"
+                    ],
+                    overweight: [
+                        "🚶 Brisk Walk - 45 min",
+                        "🏊 Swimming - 30 min",
+                        "🧘 Yoga - 30 min"
+                    ],
+                    obese: [
+                        "🚶 Brisk Walk - 60 min",
+                        "🏊 Swimming - 45 min",
+                        "🧘 Yoga - 30 min"
+                    ]
+                },
+                // Timeline
+                timeline: {
+                    underweight: [
+                        "🎯 Get healthy weight in 60 days",
+                        "📅 30 days: +2 kg",
+                        "📅 60 days: +4 kg"
+                    ],
+                    normal: [
+                        "🎯 Maintain fitness in 30 days",
+                        "📅 15 days: Toning starts",
+                        "📅 30 days: Perfect shape"
+                    ],
+                    overweight: [
+                        "🎯 Lose weight in 90 days",
+                        "📅 30 days: -3 kg",
+                        "📅 60 days: -6 kg",
+                        "📅 90 days: -10 kg"
+                    ],
+                    obese: [
+                        "🎯 Healthy life in 180 days",
+                        "📅 60 days: -5 kg",
+                        "📅 120 days: -12 kg",
+                        "📅 180 days: -20 kg"
+                    ]
+                },
+                // Tips
+                tips: [
+                    "Drink lukewarm water every morning",
+                    "Include green vegetables in your meals",
+                    "Walk for at least 30 minutes daily",
+                    "Eat jaggery instead of sugar",
+                    "Eat dinner early",
+                    "Stay away from stress, meditate",
+                    "Eat fruits, not fruit juice",
+                    "Drink more water, get less sick"
+                ],
+                // Alert message
+                alertNotNormal: "⚠️ Attention! Your BMI is not in the normal range (18.5–24.9). Please follow the diet and exercise plan."
+            },
+            hi: {
+                appTitle: "🌱 Healthy Bano",
+                appSubtitle: "आपका स्वास्थ्य, आपकी शक्ति | 100% नेचुरल और साइंटिफिक तरीका",
+                bmiCardTitle: "🔢 अपना BMI कैलकुलेट करें",
+                ageLabel: "आपकी उम्र (साल)",
+                weightLabel: "वजन (किलो)",
+                heightLabel: "ऊंचाई (सेमी)",
+                calcBtn: "मेरा BMI निकालें",
+                resultHeading: "📊 आपका रिजल्ट:",
+                rangeTitle: "📊 BMI Range तालिका",
+                rangeUnderweight: "<strong style='color:#f44336;'>कम वजन:</strong> 18.5 से कम",
+                rangeNormal: "<strong style='color:#4caf50;'>सामान्य:</strong> 18.5 – 24.9",
+                rangeOverweight: "<strong style='color:#ff9800;'>अधिक वजन:</strong> 25 – 29.9",
+                rangeObese: "<strong style='color:#d32f2f;'>मोटापा:</strong> 30 या उससे ज्यादा",
+                dietTitle: "🥗 आपका डाइट प्लान (BMI के अनुसार)",
+                dietPlaceholder: "पहले BMI कैलकुलेट करें",
+                exerciseTitle: "💪 एक्सरसाइज प्लान",
+                exercisePlaceholder: "पहले BMI कैलकुलेट करें",
+                timelineTitle: "⏰ फिटनेस टाइमलाइन",
+                timelinePlaceholder: "पहले BMI कैलकुलेट करें",
+                trackerTitle: "📱 डेली हेल्थ ट्रैकर (Data Save होगा)",
+                waterLabel: "गिलास पानी",
+                waterBtn: "+1 गिलास",
+                stepLabel: "कदम",
+                stepBtn: "+100 कदम",
+                sleepLabel: "घंटे नींद",
+                sleepBtn: "+1 घंटा",
+                tipsTitle: "💡 हेल्थ टिप्स",
+                tipBtn: "नई टिप देखें",
+                historyTitle: "📜 BMI हिस्ट्री (पिछले 5)",
+                clearHistoryBtn: "हिस्ट्री साफ करें",
+                yogaTitle: "🧘 योगा & मेडिटेशन",
+                suryaName: "सूर्य नमस्कार",
+                suryaDesc: "12 मिनट, 12 लाभ",
+                pranayamName: "प्राणायाम",
+                pranayamDesc: "10 मिनट, शांत मन",
+                footerText: "🌿 Healthy Bano - प्रकृति का तोहफा",
+                footerSubtext: "संकल्प करो, स्वस्थ बनो | 100% आयुर्वेदिक तरीका",
+                bmiCategories: {
+                    underweight: "कम वजन (Underweight) ⚠️",
+                    normal: "सामान्य वजन (Normal) - बिल्कुल सही! 🎉",
+                    overweight: "अधिक वजन (Overweight) ⚠️",
+                    obese: "मोटापा (Obese) 🚨"
+                },
+                bmiAdvice: {
+                    underweight: "आपको वजन बढ़ाने की जरूरत है। हेल्दी फैट्स और प्रोटीन लें।",
+                    normal: "आप स्वस्थ हैं। ऐसे ही रहें।",
+                    overweight: "थोड़ा वजन कम करें। एक्सरसाइज करें और खाने में कंट्रोल रखें।",
+                    obese: "डॉक्टर से मिलें। तुरंत डाइट और एक्सरसाइज शुरू करें।"
+                },
+                dietPlans: {
+                    underweight: [
+                        "🥛 नाश्ता: केला + दूध + ड्राई फ्रूट्स + मूंगफली",
+                        "🍛 दोपहर: राजमा-चावल + दही + घी",
+                        "🍲 रात: पनीर + रोटी + सलाद + गुड़",
+                        "🥜 स्नैक्स: मखाना + दूध"
+                    ],
+                    normal: [
+                        "🥣 नाश्ता: ओट्स + फल + ग्रीन टी",
+                        "🍛 दोपहर: मिक्स दाल + 2 रोटी + सलाद",
+                        "🥗 रात: सब्जी + दाल + चावल",
+                        "🌰 स्नैक्स: भुना चना + खीरा"
+                    ],
+                    overweight: [
+                        "🍎 नाश्ता: फल + ग्रीन टी + 2 बादाम",
+                        "🥦 दोपहर: ग्रिल्ड सब्जी + सलाद + दही + 1 रोटी",
+                        "🥣 रात: सलाद + दाल + ½ रोटी",
+                        "🥒 स्नैक्स: मुरमुरा + भुना चना"
+                    ],
+                    obese: [
+                        "🍏 नाश्ता: सिर्फ फल + ग्रीन टी",
+                        "🥗 दोपहर: सलाद + उबली सब्जी + दाल",
+                        "🥣 रात: सलाद + सूप (बिना रोटी)",
+                        "🥕 स्नैक्स: गाजर + मूली"
+                    ]
+                },
+                exercisePlans: {
+                    underweight: [
+                        "🏋️ वेट ट्रेनिंग - 30 मिनट",
+                        "🧘 योगा - 20 मिनट",
+                        "🚶 वॉक - 30 मिनट"
+                    ],
+                    normal: [
+                        "🏃 कार्डियो - 25 मिनट",
+                        "🧘 योगा - 20 मिनट",
+                        "🤸 स्ट्रेचिंग - 15 मिनट"
+                    ],
+                    overweight: [
+                        "🚶 तेज वॉक - 45 मिनट",
+                        "🏊 स्विमिंग - 30 मिनट",
+                        "🧘 योगा - 30 मिनट"
+                    ],
+                    obese: [
+                        "🚶 तेज वॉक - 60 मिनट",
+                        "🏊 स्विमिंग - 45 मिनट",
+                        "🧘 योगा - 30 मिनट"
+                    ]
+                },
+                timeline: {
+                    underweight: [
+                        "🎯 60 दिनों में हेल्दी वेट",
+                        "📅 30 दिन: +2 किलो",
+                        "📅 60 दिन: +4 किलो"
+                    ],
+                    normal: [
+                        "🎯 30 दिनों में फिटनेस मेंटेन",
+                        "📅 15 दिन: टोनिंग शुरू",
+                        "📅 30 दिन: परफेक्ट शेप"
+                    ],
+                    overweight: [
+                        "🎯 90 दिनों में वेट लॉस",
+                        "📅 30 दिन: -3 किलो",
+                        "📅 60 दिन: -6 किलो",
+                        "📅 90 दिन: -10 किलो"
+                    ],
+                    obese: [
+                        "🎯 180 दिनों में हेल्दी लाइफ",
+                        "📅 60 दिन: -5 किलो",
+                        "📅 120 दिन: -12 किलो",
+                        "📅 180 दिन: -20 किलो"
+                    ]
+                },
+                tips: [
+                    "रोज सुबह गुनगुना पानी पिएं",
+                    "खाने में हरी सब्जियां शामिल करें",
+                    "रोज 30 मिनट जरूर टहलें",
+                    "चीनी की जगह गुड़ खाएं",
+                    "रात को जल्दी खाना खाएं",
+                    "तनाव से दूर रहें, मेडिटेशन करें",
+                    "फलों का जूस नहीं, फल खाएं",
+                    "ज्यादा पानी पिएं, कम बीमार पड़ें"
+                ],
+                alertNotNormal: "🚨 ध्यान दें! आपका BMI सामान्य सीमा (18.5–24.9) में नहीं है। कृपया डाइट और एक्सरसाइज प्लान फॉलो करें।"
+            }
+        };
+
+        // Current language
+        let currentLang = 'hi';
+
+        // Store last input values for re-calculation on language change
+        let lastAge = '', lastWeight = '', lastHeight = '';
+
+        // ==================== LANGUAGE SWITCHER ====================
+        function setLanguage(lang) {
+            currentLang = lang;
+            // Update active button styles
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            document.getElementById('langHi').classList.toggle('active', lang === 'hi');
+            
+            // Update all static texts
+            updateStaticTexts();
+            
+            // If BMI was calculated, re-display with new language
+            if (lastAge && lastWeight && lastHeight) {
+                // Re-calculate with same values to refresh content in new language
+                calculateBMI(true); // pass flag to skip saving history again
+            }
+        }
+
+        function updateStaticTexts() {
+            const t = translations[currentLang];
+            document.getElementById('appTitle').innerText = t.appTitle;
+            document.getElementById('appSubtitle').innerText = t.appSubtitle;
+            document.getElementById('bmiCardTitle').innerText = t.bmiCardTitle;
+            document.getElementById('ageLabel').innerText = t.ageLabel;
+            document.getElementById('weightLabel').innerText = t.weightLabel;
+            document.getElementById('heightLabel').innerText = t.heightLabel;
+            document.getElementById('calcBtn').innerHTML = `<span class="material-icons" style="vertical-align: middle;">search</span> ${t.calcBtn}`;
+            document.getElementById('resultHeading').innerText = t.resultHeading;
+            document.getElementById('rangeTitle').innerText = t.rangeTitle;
+            document.getElementById('rangeUnderweight').innerHTML = t.rangeUnderweight;
+            document.getElementById('rangeNormal').innerHTML = t.rangeNormal;
+            document.getElementById('rangeOverweight').innerHTML = t.rangeOverweight;
+            document.getElementById('rangeObese').innerHTML = t.rangeObese;
+            document.getElementById('dietTitle').innerText = t.dietTitle;
+            document.getElementById('dietPlaceholder').innerText = t.dietPlaceholder;
+            document.getElementById('exerciseTitle').innerText = t.exerciseTitle;
+            document.getElementById('exercisePlaceholder').innerText = t.exercisePlaceholder;
+            document.getElementById('timelineTitle').innerText = t.timelineTitle;
+            document.getElementById('timelinePlaceholder').innerText = t.timelinePlaceholder;
+            document.getElementById('trackerTitle').innerText = t.trackerTitle;
+            document.getElementById('waterLabel').innerText = t.waterLabel;
+            document.getElementById('waterBtn').innerText = t.waterBtn;
+            document.getElementById('stepLabel').innerText = t.stepLabel;
+            document.getElementById('stepBtn').innerText = t.stepBtn;
+            document.getElementById('sleepLabel').innerText = t.sleepLabel;
+            document.getElementById('sleepBtn').innerText = t.sleepBtn;
+            document.getElementById('tipsTitle').innerText = t.tipsTitle;
+            document.getElementById('tipBtn').innerText = t.tipBtn;
+            document.getElementById('historyTitle').innerText = t.historyTitle;
+            document.getElementById('clearHistoryBtn').innerText = t.clearHistoryBtn;
+            document.getElementById('yogaTitle').innerText = t.yogaTitle;
+            document.getElementById('suryaName').innerText = t.suryaName;
+            document.getElementById('suryaDesc').innerText = t.suryaDesc;
+            document.getElementById('pranayamName').innerText = t.pranayamName;
+            document.getElementById('pranayamDesc').innerText = t.pranayamDesc;
+            document.getElementById('footerText').innerText = t.footerText;
+            document.getElementById('footerSubtext').innerText = t.footerSubtext;
+            
+            // Update tip if visible
+            if (typeof currentTipIndex !== 'undefined') {
+                document.getElementById('healthTip').innerHTML = `<p>💡 ${t.tips[currentTipIndex]}</p>`;
+            } else {
+                document.getElementById('healthTip').innerHTML = `<p>💡 ${t.tips[0]}</p>`;
+            }
+        }
+
+        // ==================== DATABASE (localStorage) ====================
+        let waterIntake = 0;
+        let steps = 0;
+        let sleep = 0;
+
+        window.onload = function() {
+            // Load trackers
+            waterIntake = parseInt(localStorage.getItem('waterIntake')) || 0;
+            steps = parseInt(localStorage.getItem('steps')) || 0;
+            sleep = parseInt(localStorage.getItem('sleep')) || 0;
+            document.getElementById('waterCount').innerHTML = waterIntake;
+            document.getElementById('stepCount').innerHTML = steps;
+            document.getElementById('sleepHours').innerHTML = sleep;
+
+            // Load BMI history
+            displayBMIHistory();
+            
+            // Set initial language
+            setLanguage('hi');
+        };
+
+        function saveTrackers() {
+            localStorage.setItem('waterIntake', waterIntake);
+            localStorage.setItem('steps', steps);
+            localStorage.setItem('sleep', sleep);
+        }
+
+        function addWater() {
+            waterIntake++;
+            document.getElementById('waterCount').innerHTML = waterIntake;
+            saveTrackers();
+            if (waterIntake >= 8) {
+                alert(translations[currentLang].tips[0]); // just a placeholder, you can set a specific message
+            }
+        }
+
+        function addSteps() {
+            steps += 100;
+            document.getElementById('stepCount').innerHTML = steps;
+            saveTrackers();
+            if (steps >= 10000) {
+                alert(translations[currentLang].tips[1]);
+            }
+        }
+
+        function addSleep() {
+            sleep++;
+            document.getElementById('sleepHours').innerHTML = sleep;
+            saveTrackers();
+        }
+
+        // ==================== BMI CALCULATOR ====================
+        function calculateBMI(skipHistory = false) {
+            const age = document.getElementById('age').value;
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+
+            if (!age || !weight || !height) {
+                alert(translations[currentLang].dietPlaceholder); // "Calculate BMI first" kind of message
+                return;
+            }
+
+            // Store last values for language switch
+            lastAge = age;
+            lastWeight = weight;
+            lastHeight = height;
+
+            const heightInM = height / 100;
+            const bmi = (weight / (heightInM * heightInM)).toFixed(1);
+            
+            let categoryKey = '';
+            let progressWidth = 0;
+            let isNormal = true;
+
+            if (bmi < 18.5) {
+                categoryKey = 'underweight';
+                progressWidth = 30;
+                isNormal = false;
+            } else if (bmi >= 18.5 && bmi < 25) {
+                categoryKey = 'normal';
+                progressWidth = 60;
+                isNormal = true;
+            } else if (bmi >= 25 && bmi < 30) {
+                categoryKey = 'overweight';
+                progressWidth = 80;
+                isNormal = false;
+            } else {
+                categoryKey = 'obese';
+                progressWidth = 100;
+                isNormal = false;
+            }
+
+            const t = translations[currentLang];
+            const category = t.bmiCategories[categoryKey];
+            const advice = t.bmiAdvice[categoryKey];
+
+            // Show result
+            document.getElementById('bmiResult').style.display = 'block';
+            document.getElementById('bmiValue').innerHTML = `BMI: ${bmi}`;
+            document.getElementById('bmiCategory').innerHTML = `${t.resultHeading.split(' ')[0]} ${category}`;
+            document.getElementById('bmiAdvice').innerHTML = advice;
+
+            // Change progress bar color
+            const progressFill = document.getElementById('bmiProgress');
+            progressFill.style.width = progressWidth + '%';
+            if (isNormal) {
+                progressFill.classList.remove('red');
+                progressFill.style.background = 'linear-gradient(90deg, #4caf50, #2e7d32)';
+            } else {
+                progressFill.classList.add('red');
+                progressFill.style.background = 'linear-gradient(90deg, #ff5252, #d32f2f)';
+                if (!skipHistory) {
+                    alert(t.alertNotNormal);
+                }
+            }
+
+            // Save to history only on first calculation (not on language switch)
+            if (!skipHistory) {
+                saveBMItoHistory(bmi, category, age, weight, height);
+            }
+
+            // Generate all plans
+            generateDietPlan(categoryKey);
+            generateExercisePlan(categoryKey);
+            generateTimeline(categoryKey);
+        }
+
+        // ==================== BMI HISTORY ====================
+        function saveBMItoHistory(bmi, category, age, weight, height) {
+            let history = JSON.parse(localStorage.getItem('bmiHistory')) || [];
+            const record = {
+                date: new Date().toLocaleString(),
+                bmi: bmi,
+                category: category,
+                age: age,
+                weight: weight,
+                height: height
+            };
+            history.unshift(record);
+            if (history.length > 5) history.pop();
+            localStorage.setItem('bmiHistory', JSON.stringify(history));
+            displayBMIHistory();
+        }
+
+        function displayBMIHistory() {
+            const historyContainer = document.getElementById('bmiHistory');
+            let history = JSON.parse(localStorage.getItem('bmiHistory')) || [];
+            if (history.length === 0) {
+                historyContainer.innerHTML = `<p>${translations[currentLang].dietPlaceholder}</p>`; // "No history"
+                return;
+            }
+            let html = '';
+            history.forEach(record => {
+                html += `<div class="history-item">
+                    <strong>${record.date}</strong><br>
+                    BMI: ${record.bmi} (${record.category})<br>
+                    ${translations[currentLang].ageLabel}: ${record.age}, ${translations[currentLang].weightLabel}: ${record.weight}kg
+                </div>`;
+            });
+            historyContainer.innerHTML = html;
+        }
+
+        function clearHistory() {
+            if (confirm(translations[currentLang].clearHistoryBtn + '?')) {
+                localStorage.removeItem('bmiHistory');
+                displayBMIHistory();
+            }
+        }
+
+        // ==================== DIET, EXERCISE, TIMELINE ====================
+        function generateDietPlan(categoryKey) {
+            const t = translations[currentLang];
+            const items = t.dietPlans[categoryKey] || t.dietPlans.normal;
+            let html = '';
+            items.forEach(item => {
+                html += `<div class="diet-item"><span class="material-icons">restaurant</span>${item}</div>`;
+            });
+            document.getElementById('dietPlan').innerHTML = html;
+        }
+
+        function generateExercisePlan(categoryKey) {
+            const t = translations[currentLang];
+            const items = t.exercisePlans[categoryKey] || t.exercisePlans.normal;
+            let html = '';
+            items.forEach(item => {
+                const parts = item.split(' - ');
+                html += `<div class="exercise-item"><span>${parts[0]}</span><span class="exercise-time">${parts[1]}</span></div>`;
+            });
+            document.getElementById('exercisePlan').innerHTML = html;
+        }
+
+        function generateTimeline(categoryKey) {
+            const t = translations[currentLang];
+            const items = t.timeline[categoryKey] || t.timeline.normal;
+            let html = '';
+            items.forEach(item => {
+                html += `<p>${item}</p>`;
+            });
+            html += `<p>⏰ ${t.tips[2]}</p>`; // "1 hour daily"
+            document.getElementById('timeline').innerHTML = html;
+        }
+
+        // ==================== HEALTH TIPS ====================
+        let currentTipIndex = 0;
+        function newTip() {
+            const t = translations[currentLang];
+            currentTipIndex = (currentTipIndex + 1) % t.tips.length;
+            document.getElementById('healthTip').innerHTML = `<p>💡 ${t.tips[currentTipIndex]}</p>`;
+        }
+
+        setInterval(newTip, 30000);
+    </script>
+</body>
+</html>
